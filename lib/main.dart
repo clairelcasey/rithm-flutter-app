@@ -75,8 +75,14 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        // leading: Image.asset('assets/rithm.png'),
-        title: Image.asset('assets/rithm.png'),
+        leading: Image.asset('assets/rithm.png',
+                            ),
+        titleSpacing: 65.0,
+        centerTitle: false,
+        leadingWidth: 100.0,
+        
+        title: Text('R19 Upcoming'),
+        // title: Image.asset('assets/rithm.png'),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
