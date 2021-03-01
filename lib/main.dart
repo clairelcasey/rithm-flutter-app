@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import './homepage.dart';
 
+
 void main() {
-  runApp(RithmApp());
+  runApp(MyApp());
 }
 
-class RithmApp extends StatelessWidget {
+class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,6 @@ class RithmApp extends StatelessWidget {
     );
   }
 }
-
 
 MaterialColor createMaterialColor(Color color) {
   List strengths = <double>[.05];
