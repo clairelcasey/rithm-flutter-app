@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+// import '../Routes.dart';
+import '../staffmemberspage.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -6,7 +8,7 @@ class AppDrawer extends StatelessWidget {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
-        children: const <Widget>[
+        children: <Widget>[
           DrawerHeader(
             decoration: BoxDecoration(
               color: const Color(0xFFE46B66),
@@ -20,11 +22,16 @@ class AppDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.people),
-            title: Text('Staff Memebers'),
-            //   onTap: () =>
-            // Navigator.pushReplacementNamed(context, Routes.contacts)
-          ),
+              leading: Icon(Icons.people),
+              title: Text('Staff Memebers'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => StaffMembersPage()),
+                );
+              }
+                  // Navigator.pushReplacementNamed(context, Routes.staffMembers
+              ),
           ListTile(
             leading: Icon(Icons.message),
             title: Text('Messages'),

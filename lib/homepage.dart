@@ -4,6 +4,7 @@ import './scheduleData.dart';
 import './detailpage.dart';
 import './widgets/drawer.dart';
 
+
 class Homepage extends StatefulWidget {
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -43,15 +44,15 @@ class _UpcomingScheduleState extends State<Homepage> {
         if (item == 0) {
           // return the header
           return Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Text(
-            "Upcoming Lectures/ Exercises:",
-            style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.w500,
-            ),
-            // textAlign: TextAlign.center,
-          ));
+              padding: const EdgeInsets.all(15.0),
+              child: Text(
+                "Upcoming Lectures/ Exercises:",
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.w500,
+                ),
+                // textAlign: TextAlign.center,
+              ));
         }
         item -= 1;
         return _buildRow(_upcomingSchedule[item]);
@@ -99,7 +100,7 @@ class _UpcomingScheduleState extends State<Homepage> {
       ),
       body: _buildHomepage(),
       endDrawer: AppDrawer(),
-      );
+    );
   }
 }
 
