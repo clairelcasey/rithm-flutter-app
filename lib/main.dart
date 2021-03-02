@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import './homepage.dart';
-
+import './detailpage.dart';
 
 void main() {
   runApp(MyApp());
@@ -23,12 +23,17 @@ class MyApp extends StatelessWidget {
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
         primarySwatch: createMaterialColor(Color(0xFFE46B66)),
+        fontFamily: 'Source Serif Pro',
+        // colorScheme: createMaterialColor(Color(0xFFE46B66)),
         // This makes the visual density adapt to the platform that you run
         // the app on. For desktop platforms, the controls will be smaller and
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Homepage(),
+      routes: {
+        DetailPage.routeName: (context) => DetailPage(),
+      },
     );
   }
 }
