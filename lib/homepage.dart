@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:rithm_sis/api/staff.dart';
 import 'package:rithm_sis/detailpage.dart';
 import './scheduleData.dart';
 import './detailpage.dart';
 import './widgets/drawer.dart';
-
+import './api/upcoming.dart';
 
 class Homepage extends StatefulWidget {
   // This widget is the home page of your application. It is stateful, meaning
@@ -20,57 +21,75 @@ class Homepage extends StatefulWidget {
 }
 
 class _UpcomingScheduleState extends State<Homepage> {
-  final _upcomingSchedule = scheduleData;
+  Future<List> futureUpcoming;
 
-  Widget _buildHomepage() {
+  @override
+  void initState() {
+    print('IN INITSTATE');
+    super.initState();
+    futureUpcoming = fetchUpcoming();
+  }
+
+  Widget _buildHomepage(List upcomingData) {
+    print('buildHomepage');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       // mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         // Text('Upcoming Lectures/ Exercises:'),
         Expanded(
-          child: _buildUpcomingList(),
+          child: _buildUpcomingList(upcomingData),
         ),
       ],
     );
   }
 
-  Widget _buildUpcomingList() {
+  Widget _buildUpcomingList(List upcomingData) {
     return ListView.separated(
-      itemCount: _upcomingSchedule.length,
+      itemCount: upcomingData.length,
       padding: const EdgeInsets.all(16.0),
       separatorBuilder: (BuildContext context, int index) => Divider(),
       itemBuilder: (context, item) {
-        if (item == 0) {
-          // return the header
-          return Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Text(
-                "Upcoming Lectures/ Exercises:",
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w500,
-                ),
-                // textAlign: TextAlign.center,
-              ));
-        }
-        item -= 1;
-        return _buildRow(_upcomingSchedule[item]);
+        // if (item == 0) {
+        //   // return the header
+        //   return Padding(
+        //       padding: const EdgeInsets.all(15.0),
+        //       child: Text(
+        //         "Upcoming Lectures/ Exercises:",
+        //         style: TextStyle(
+        //           fontSize: 18.0,
+        //           fontWeight: FontWeight.w500,
+        //         ),
+        //         // textAlign: TextAlign.center,
+        //       ));
+        // }
+        // item -= 1;
+        // print('_upcomingSchedule is $_upcomingSchedule');
+        // print('futureStaffMembers is $futureStaffMembers');
+        return _buildRow(upcomingData[item]);
       },
     );
   }
 
   Widget _buildRow(Map scheduleItem) {
-    var dateTime = scheduleItem['date'] + ' ' + scheduleItem['start_at'];
+    print('scheduleItem is $scheduleItem');
+    String type = scheduleItem['type'];
+    // var test = scheduleItem[type];
+    var title;
+    if (type == "exercise") {
+      title = scheduleItem['exercisesession']['exercise']['title'];
+    } else {
+      title = scheduleItem[type]['title'];
+    }
+    print('title is $title');
     return ListTile(
-        title: Text(scheduleItem['title'], style: TextStyle(fontSize: 18.0)),
-        subtitle: Text(dateTime, style: TextStyle(fontSize: 12.0)),
+        title: Text(title, style: TextStyle(fontSize: 18.0)),
+        subtitle: Text(scheduleItem['start_at'], style: TextStyle(fontSize: 12.0)),
         trailing: IconButton(
             icon: Icon(Icons.read_more, size: 30.0),
             onPressed: () {
               Navigator.pushNamed(context, DetailPage.routeName,
-                  arguments: ScreenArguments(
-                    scheduleItem['title'],
+                  arguments: ScreenArguments(title,
                   ));
             }));
   }
@@ -98,7 +117,20 @@ class _UpcomingScheduleState extends State<Homepage> {
         //   IconButton(icon: Icon(Icons.list), onPressed: () => {})
         // ]
       ),
-      body: _buildHomepage(),
+      body: FutureBuilder(
+        future: futureUpcoming,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            var snapData = snapshot.data;
+            return _buildHomepage(snapData);
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+
+          // By default, show a loading spinner.
+          return CircularProgressIndicator();
+        },
+      ),
       endDrawer: AppDrawer(),
     );
   }
