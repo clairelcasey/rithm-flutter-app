@@ -72,24 +72,19 @@ class _UpcomingScheduleState extends State<Homepage> {
   }
 
   Widget _buildRow(Map scheduleItem) {
+    print('inside builtrow');
     print('scheduleItem is $scheduleItem');
-    String type = scheduleItem['type'];
-    // var test = scheduleItem[type];
-    var title;
-    if (type == "exercise") {
-      title = scheduleItem['exercisesession']['exercise']['title'];
-    } else {
-      title = scheduleItem[type]['title'];
-    }
-    print('title is $title');
+
     return ListTile(
-        title: Text(title, style: TextStyle(fontSize: 18.0)),
-        subtitle: Text(scheduleItem['start_at'], style: TextStyle(fontSize: 12.0)),
+        title: Text(scheduleItem['title'], style: TextStyle(fontSize: 18.0)),
+        subtitle:
+            Text(scheduleItem['start_at'], style: TextStyle(fontSize: 12.0)),
         trailing: IconButton(
             icon: Icon(Icons.read_more, size: 30.0),
             onPressed: () {
               Navigator.pushNamed(context, DetailPage.routeName,
-                  arguments: ScreenArguments(title,
+                  arguments: ScreenArguments(
+                    scheduleItem['title'],
                   ));
             }));
   }
