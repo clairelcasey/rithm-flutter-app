@@ -63,6 +63,7 @@ List parsedData(List responseData) {
         'end_at': scheduleItem['end_at'],
         'description': scheduleItem['exercisesession']['exercise']
             ['description'],
+        'type': type,
       };
       output.add(item);
     } else if (type == 'lecture') {
@@ -71,6 +72,7 @@ List parsedData(List responseData) {
         'start_at': scheduleItem['start_at'],
         'end_at': scheduleItem['end_at'],
         'description': scheduleItem[type]['description'],
+        'type': type,
       };
       output.add(item);
 
@@ -80,6 +82,7 @@ List parsedData(List responseData) {
         'start_at': scheduleItem['start_at'],
         'end_at': scheduleItem['end_at'],
         'description': scheduleItem['description'],
+        'type': type,
       };
       output.add(item);
     }

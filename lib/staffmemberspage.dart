@@ -47,7 +47,7 @@ class _StaffDataState extends State<StaffMembersPage> {
   }
 
   Widget _buildStaffDetail(Map staffMember) {
-    final String full_name =
+    final String fullName =
         staffMember['first_name'] + " " + staffMember['last_name'];
     Random random = new Random();
     int randStaffPhoto = random.nextInt(staffPhotoData.length);
@@ -61,7 +61,7 @@ class _StaffDataState extends State<StaffMembersPage> {
           ),
         ),
       ),
-      title: Text(full_name),
+      title: Text(fullName),
       subtitle: Text(staffMember['bio']),
       isThreeLine: true,
     );

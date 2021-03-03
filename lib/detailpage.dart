@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import './homepage.dart';
-import 'package:intl/intl.dart';
 
 class DetailPage extends StatelessWidget {
   static const routeName = '/extractArguments';

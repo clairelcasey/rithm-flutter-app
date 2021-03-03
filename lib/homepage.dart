@@ -70,7 +70,6 @@ class _UpcomingScheduleState extends State<Homepage> {
   }
 
   Widget _buildRow(Map scheduleItem) {
-
     DateTime dtStart = DateTime.parse(scheduleItem['start_at']);
     DateTime dtEnd = DateTime.parse(scheduleItem['end_at']);
 
@@ -80,9 +79,22 @@ class _UpcomingScheduleState extends State<Homepage> {
     final String endFormatted = formatter.format(dtEnd);
 
     return ListTile(
-        title: Text(scheduleItem['title'], style: TextStyle(fontSize: 18.0)),
-        subtitle:
-            Text(startFormatted, style: TextStyle(fontSize: 12.0)),
+        title: RichText(
+          text: TextSpan(
+            // text: '',
+            // style: DefaultTextStyle.of(context).style,
+            children: <TextSpan>[
+              TextSpan(
+                  text: scheduleItem['title'] + ' ',
+                  style: TextStyle(color: Colors.black,
+                                   fontSize: 20.0)),
+              TextSpan(text: '(' + scheduleItem['type'] + ')',
+                       style: TextStyle(color: Colors.grey)),
+            ],
+          ),
+        ),
+
+        subtitle: Text(startFormatted, style: TextStyle(fontSize: 12.0)),
         trailing: IconButton(
             icon: Icon(Icons.read_more, size: 30.0),
             onPressed: () {
@@ -92,6 +104,7 @@ class _UpcomingScheduleState extends State<Homepage> {
                     scheduleItem['description'],
                     startFormatted,
                     endFormatted,
+                    scheduleItem['type'],
                   ));
             }));
   }
@@ -130,9 +143,7 @@ class _UpcomingScheduleState extends State<Homepage> {
           }
 
           // By default, show a loading spinner.
-          return Center(
-            child: CircularProgressIndicator()
-          );
+          return Center(child: CircularProgressIndicator());
         },
       ),
       endDrawer: AppDrawer(),
@@ -145,6 +156,7 @@ class ScreenArguments {
   final String description;
   final String start_at;
   final String end_at;
+  final String type;
 
-  ScreenArguments(this.title, this.description, this.start_at, this.end_at);
+  ScreenArguments(this.title, this.description, this.start_at, this.end_at, this.type);
 }
