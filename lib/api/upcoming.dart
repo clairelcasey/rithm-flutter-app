@@ -1,12 +1,16 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+String apiUrl = 'http://127.0.0.1:8000/api';
 
+/// Get upcoming data.
+/// If server response is 200:
+/// - parse the JSON decoded data and return
+/// Otherwise: throw error
 Future<List> fetchUpcoming() async {
-  final response = await http.get('http://127.0.0.1:8000/api/upcoming');
+  final response = await http.get('$apiUrl/upcoming');
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
     // then parse the JSON.
-    print('inside fetchUpcoming');
     List parsedJson = jsonDecode(response.body);
     return parsedData(parsedJson);
   } else {
@@ -16,12 +20,40 @@ Future<List> fetchUpcoming() async {
   }
 }
 
+/// Given JSON data from /upcoming in the API:
+/// - parse the data based on type of input
+/// - return parsed data
+/// e.g. INPUT:
+///   [{
+//   "exercisesession": {
+//     "exercise": {
+//       "id": "exercise1",
+//       "title": "exerciseTitle1",
+//       "description": "exersice1 description here",
+//       "is_sprint": true,
+//       "status": "published"
+//     },
+//     "cohort": {
+//       "id": "r50",
+//     },
+//     "week_group": "",
+//     "student_pairings": ""
+//   },
+//   "end_at": "2021-04-07T16:12:27-07:00",
+//   "start_at": "2021-03-19T16:12:21-07:00",
+//   "type": "exercise"
+// }]
+// OUTPUT:
+// [{
+//    'title': "exerciseTitle1",
+//    'start_at': s"2021-03-19T16:12:21-07:00",
+//    'end_at': "2021-04-07T16:12:27-07:00",
+//    'description': "exersice1 description here",
+// }]
 List parsedData(List responseData) {
-  List output;
-  print('inside parseData');
+  List output = [];
 
   for (var scheduleItem in responseData) {
-    print('parsedData scheduleItem $scheduleItem');
     String type = scheduleItem['type'];
 
     if (type == "exercise") {
@@ -40,10 +72,8 @@ List parsedData(List responseData) {
         'end_at': scheduleItem['end_at'],
         'description': scheduleItem[type]['description'],
       };
-      print('item in lecture $item');
       output.add(item);
 
-      print('lecture $scheduleItem');
     } else {
       var item = {
         'title': scheduleItem['title'],
@@ -51,10 +81,8 @@ List parsedData(List responseData) {
         'end_at': scheduleItem['end_at'],
         'description': scheduleItem['description'],
       };
-      print('event $scheduleItem');
       output.add(item);
     }
   }
-  print('formatted data $output');
   return output;
 }

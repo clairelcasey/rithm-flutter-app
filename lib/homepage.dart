@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:rithm_sis/api/staff.dart';
 import 'package:rithm_sis/detailpage.dart';
-import './scheduleData.dart';
 import './detailpage.dart';
 import './widgets/drawer.dart';
 import './api/upcoming.dart';
+import 'package:intl/intl.dart';
 
 class Homepage extends StatefulWidget {
   // This widget is the home page of your application. It is stateful, meaning
@@ -25,7 +24,6 @@ class _UpcomingScheduleState extends State<Homepage> {
 
   @override
   void initState() {
-    print('IN INITSTATE');
     super.initState();
     futureUpcoming = fetchUpcoming();
   }
@@ -72,19 +70,28 @@ class _UpcomingScheduleState extends State<Homepage> {
   }
 
   Widget _buildRow(Map scheduleItem) {
-    print('inside builtrow');
-    print('scheduleItem is $scheduleItem');
+
+    DateTime dtStart = DateTime.parse(scheduleItem['start_at']);
+    DateTime dtEnd = DateTime.parse(scheduleItem['end_at']);
+
+    final DateFormat formatter = DateFormat.EEEE().add_yMd().add_jm();
+
+    final String startFormatted = formatter.format(dtStart);
+    final String endFormatted = formatter.format(dtEnd);
 
     return ListTile(
         title: Text(scheduleItem['title'], style: TextStyle(fontSize: 18.0)),
         subtitle:
-            Text(scheduleItem['start_at'], style: TextStyle(fontSize: 12.0)),
+            Text(startFormatted, style: TextStyle(fontSize: 12.0)),
         trailing: IconButton(
             icon: Icon(Icons.read_more, size: 30.0),
             onPressed: () {
               Navigator.pushNamed(context, DetailPage.routeName,
                   arguments: ScreenArguments(
                     scheduleItem['title'],
+                    scheduleItem['description'],
+                    startFormatted,
+                    endFormatted,
                   ));
             }));
   }
@@ -123,7 +130,9 @@ class _UpcomingScheduleState extends State<Homepage> {
           }
 
           // By default, show a loading spinner.
-          return CircularProgressIndicator();
+          return Center(
+            child: CircularProgressIndicator()
+          );
         },
       ),
       endDrawer: AppDrawer(),
@@ -133,6 +142,9 @@ class _UpcomingScheduleState extends State<Homepage> {
 
 class ScreenArguments {
   final String title;
+  final String description;
+  final String start_at;
+  final String end_at;
 
-  ScreenArguments(this.title);
+  ScreenArguments(this.title, this.description, this.start_at, this.end_at);
 }

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:rithm_sis/homepage.dart';
 import './homepage.dart';
 import './api/staff.dart';
+import './api/staffPhotoData.dart';
+import 'dart:math';
 
 class StaffMembersPage extends StatefulWidget {
   static const String routeName = "/staff";
@@ -47,13 +49,15 @@ class _StaffDataState extends State<StaffMembersPage> {
   Widget _buildStaffDetail(Map staffMember) {
     final String full_name =
         staffMember['first_name'] + " " + staffMember['last_name'];
+    Random random = new Random();
+    int randStaffPhoto = random.nextInt(staffPhotoData.length);
     return ListTile(
       leading: Container(
         width: 50,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           image: DecorationImage(
-            image: NetworkImage("https://rithm-students-media.s3.amazonaws.com/CACHE/images/user_photos/elie/fe2c614e-d1fd-4357-9d62-eb31c45546c9-DAOf3xQO_400x400/bf0813b3c0ab307cf14a4edeb3e3848e.jpg"),
+            image: NetworkImage(staffPhotoData[randStaffPhoto]),
           ),
         ),
       ),
