@@ -38,24 +38,26 @@ class Debouncer {
 class _UpcomingScheduleState extends State<Homepage> {
   Future<List> futureUpcoming;
   List filteredUpcomingData;
+  bool showFilteredData = false;
 
   @override
   void initState() {
     super.initState();
     futureUpcoming = fetchUpcoming();
     filteredUpcomingData = [];
+    showFilteredData = false;
   }
 
   Widget _buildHomepage(List upcomingData) {
-    // setState(() {
-    //   filteredUpcomingData = upcomingData;
-    //   });
+
+    print('showFilteredData top of Homepage $showFilteredData');
+    var dataToShow = (showFilteredData) ? filteredUpcomingData : upcomingData;
+    print('dataToShow $dataToShow');
 
     final _debouncer = Debouncer(milliseconds: 500);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
-      // mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Padding(
           padding: EdgeInsets.all(8.0),
@@ -70,6 +72,11 @@ class _UpcomingScheduleState extends State<Homepage> {
             onChanged: (string) {
               _debouncer.run(() {
                 setState(() {
+                  // TODO: Currently, the showFilteredData is being set each 
+                  // time the search is changed. This should be refactored to 
+                  // only change this state once the build is complete. 
+                  // We couldn't figure out how to setState inside a build without infinite re-rednerings, so we set the state here.
+                  showFilteredData = true;
                   filteredUpcomingData = upcomingData
                       .where((u) => (u['title']
                               .toLowerCase()
@@ -89,9 +96,8 @@ class _UpcomingScheduleState extends State<Homepage> {
           indent: 0,
           endIndent: 0,
         ),
-        // Text('Upcoming Lectures/ Exercises:'),
         Expanded(
-          child: _buildUpcomingList(filteredUpcomingData),
+          child: _buildUpcomingList(dataToShow),
         ),
       ],
     );
@@ -103,6 +109,8 @@ class _UpcomingScheduleState extends State<Homepage> {
       padding: const EdgeInsets.all(16.0),
       separatorBuilder: (BuildContext context, int index) => Divider(),
       itemBuilder: (context, item) {
+        // NOTE: initially had a header, but decided not to. Leaving this in 
+        // for reference. 
         // if (item == 0) {
         //   // return the header
         //   return Padding(
@@ -117,8 +125,6 @@ class _UpcomingScheduleState extends State<Homepage> {
         //       ));
         // }
         // item -= 1;
-        // print('_upcomingSchedule is $_upcomingSchedule');
-        // print('futureStaffMembers is $futureStaffMembers');
         return _buildRow(upcomingData[item]);
       },
     );
@@ -136,8 +142,6 @@ class _UpcomingScheduleState extends State<Homepage> {
     return ListTile(
         title: RichText(
           text: TextSpan(
-            // text: '',
-            // style: DefaultTextStyle.of(context).style,
             children: <TextSpan>[
               TextSpan(
                   text: scheduleItem['title'] + ' ',
@@ -173,8 +177,6 @@ class _UpcomingScheduleState extends State<Homepage> {
     // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         leading: Image.asset(
           'assets/rithm.png',
         ),
@@ -182,10 +184,11 @@ class _UpcomingScheduleState extends State<Homepage> {
         centerTitle: true,
         leadingWidth: 100.0,
         title: Text('{R} Cohort 19'),
-        // actions: <Widget>[
-        //   IconButton(icon: Icon(Icons.list), onPressed: () => {})
-        // ]
       ),
+      // FutureBuilder shows a loading indicator until data from the API has 
+      // been fetched (futureUpcoming state is resolved). It passes the 
+      // resolved data down to build Homepage. 
+      // For reference: https://api.flutter.dev/flutter/widgets/FutureBuilder-class.html
       body: FutureBuilder(
         future: futureUpcoming,
         builder: (context, snapshot) {
@@ -195,7 +198,6 @@ class _UpcomingScheduleState extends State<Homepage> {
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");
           }
-
           // By default, show a loading spinner.
           return Center(child: CircularProgressIndicator());
         },
@@ -205,6 +207,7 @@ class _UpcomingScheduleState extends State<Homepage> {
   }
 }
 
+/// Create screen arguments class for upcoming data so that data can be passed //// to child widgets. 
 class ScreenArguments {
   final String title;
   final String description;
