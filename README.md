@@ -26,7 +26,7 @@ https://flutter.dev/docs/get-started/install/macos
 - We wanted to experience a typed language(Dart) to better understand the benefits of compile-time error checking.
 - Dart is fairly easy to pick up with some knowledge in JavaScript, Python and/or Java.
 - Flutter is cross-platform and allows for developing andriod and ios mobile apps in one codebase.
-- One challenge we faced in the beginning was to understand how the widgets work with each other. Once we got over the learning curve, widgets were easy to work with as an unified model.  
+- One challenge we faced in the beginning was to understand how the widgets work with each other. Once we got over the learning curve, widgets were easy to work with as a unified model.  
 
 ## For Reference
 A few resources to get you started if this is your first Flutter project:
