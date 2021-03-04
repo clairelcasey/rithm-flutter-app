@@ -4,6 +4,7 @@ import './detailpage.dart';
 import './widgets/drawer.dart';
 import './api/upcoming.dart';
 import 'package:intl/intl.dart';
+import 'dart:async';
 
 class Homepage extends StatefulWidget {
   // This widget is the home page of your application. It is stateful, meaning
@@ -19,8 +20,24 @@ class Homepage extends StatefulWidget {
   _UpcomingScheduleState createState() => _UpcomingScheduleState();
 }
 
+class Debouncer {
+  final int milliseconds;
+  VoidCallback action;
+  Timer _timer;
+
+  Debouncer({this.milliseconds});
+
+  run(VoidCallback action) {
+    if (null != _timer) {
+      _timer.cancel();
+    }
+    _timer = Timer(Duration(milliseconds: milliseconds), action);
+  }
+}
+
 class _UpcomingScheduleState extends State<Homepage> {
   Future<List> futureUpcoming;
+
 
   @override
   void initState() {
@@ -30,13 +47,35 @@ class _UpcomingScheduleState extends State<Homepage> {
 
   Widget _buildHomepage(List upcomingData) {
     print('buildHomepage');
+    List filteredUpcomingData = upcomingData;
+
+    final _debouncer = Debouncer(milliseconds: 500);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       // mainAxisSize: MainAxisSize.min,
       children: <Widget>[
+        TextField(
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.all(15.0),
+            hintText: 'Filter by title or type.',
+          ),
+          onChanged: (string) {
+            _debouncer.run(() {
+              setState(() {
+                filteredUpcomingData = upcomingData
+                    .where((u) => (u.title
+                            .toLowerCase()
+                            .contains(string.toLowerCase()) ||
+                        u.type.toLowerCase().contains(string.toLowerCase())))
+                    .toList();
+              });
+            });
+          },
+        ),
         // Text('Upcoming Lectures/ Exercises:'),
         Expanded(
-          child: _buildUpcomingList(upcomingData),
+          child: _buildUpcomingList(filteredUpcomingData),
         ),
       ],
     );
@@ -86,14 +125,13 @@ class _UpcomingScheduleState extends State<Homepage> {
             children: <TextSpan>[
               TextSpan(
                   text: scheduleItem['title'] + ' ',
-                  style: TextStyle(color: Colors.black,
-                                   fontSize: 20.0)),
-              TextSpan(text: '(' + scheduleItem['type'] + ')',
-                       style: TextStyle(color: Colors.grey)),
+                  style: TextStyle(color: Colors.black, fontSize: 20.0)),
+              TextSpan(
+                  text: '(' + scheduleItem['type'] + ')',
+                  style: TextStyle(color: Colors.grey)),
             ],
           ),
         ),
-
         subtitle: Text(startFormatted, style: TextStyle(fontSize: 12.0)),
         trailing: IconButton(
             icon: Icon(Icons.read_more, size: 30.0),
@@ -158,5 +196,6 @@ class ScreenArguments {
   final String end_at;
   final String type;
 
-  ScreenArguments(this.title, this.description, this.start_at, this.end_at, this.type);
+  ScreenArguments(
+      this.title, this.description, this.start_at, this.end_at, this.type);
 }
