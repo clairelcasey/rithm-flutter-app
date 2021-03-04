@@ -1,7 +1,7 @@
-# rithm_sis
+# Rithm Mobile App
 A Flutter project for Rithm School's student information system(sis). 
 
-## Potential improvements to be made.
+## Potential improvements to be made
 - Add tests.
 - Edit user profile from the mobile app (An icon for profile already exist in the drawer).
 - User authentication functionalities. 
