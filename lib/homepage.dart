@@ -20,20 +20,6 @@ class Homepage extends StatefulWidget {
   _UpcomingScheduleState createState() => _UpcomingScheduleState();
 }
 
-class Debouncer {
-  final int milliseconds;
-  VoidCallback action;
-  Timer _timer;
-
-  Debouncer({this.milliseconds});
-
-  run(VoidCallback action) {
-    if (null != _timer) {
-      _timer.cancel();
-    }
-    _timer = Timer(Duration(milliseconds: milliseconds), action);
-  }
-}
 
 class _UpcomingScheduleState extends State<Homepage> {
   Future<List> futureUpcoming;
@@ -217,4 +203,22 @@ class ScreenArguments {
 
   ScreenArguments(
       this.title, this.description, this.start_at, this.end_at, this.type);
+}
+
+
+class Debouncer {
+  // Debouncer class calls function after a certian amount of time has passed.  
+  // It is used for the search bar functionality. 
+  final int milliseconds;
+  VoidCallback action;
+  Timer _timer;
+
+  Debouncer({this.milliseconds});
+
+  run(VoidCallback action) {
+    if (null != _timer) {
+      _timer.cancel();
+    }
+    _timer = Timer(Duration(milliseconds: milliseconds), action);
+  }
 }
