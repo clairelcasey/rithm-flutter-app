@@ -37,17 +37,19 @@ class Debouncer {
 
 class _UpcomingScheduleState extends State<Homepage> {
   Future<List> futureUpcoming;
-
+  List filteredUpcomingData;
 
   @override
   void initState() {
     super.initState();
     futureUpcoming = fetchUpcoming();
+    filteredUpcomingData = [];
   }
 
   Widget _buildHomepage(List upcomingData) {
-    print('buildHomepage');
-    List filteredUpcomingData = upcomingData;
+    // setState(() {
+    //   filteredUpcomingData = upcomingData;
+    //   });
 
     final _debouncer = Debouncer(milliseconds: 500);
 
@@ -55,23 +57,37 @@ class _UpcomingScheduleState extends State<Homepage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       // mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        TextField(
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.all(15.0),
-            hintText: 'Filter by title or type.',
-          ),
-          onChanged: (string) {
-            _debouncer.run(() {
-              setState(() {
-                filteredUpcomingData = upcomingData
-                    .where((u) => (u.title
-                            .toLowerCase()
-                            .contains(string.toLowerCase()) ||
-                        u.type.toLowerCase().contains(string.toLowerCase())))
-                    .toList();
+        Padding(
+          padding: EdgeInsets.all(8.0),
+          child: TextField(
+            decoration: InputDecoration(
+              icon: Icon(Icons.search),
+              contentPadding: EdgeInsets.all(10.0),
+              helperText: 'Title or type (lecture, event, exercise)',
+              hintText: 'Filter by title or type.',
+              border: const OutlineInputBorder(),
+            ),
+            onChanged: (string) {
+              _debouncer.run(() {
+                setState(() {
+                  filteredUpcomingData = upcomingData
+                      .where((u) => (u['title']
+                              .toLowerCase()
+                              .contains(string.toLowerCase()) ||
+                          u['type']
+                              .toLowerCase()
+                              .contains(string.toLowerCase())))
+                      .toList();
+                });
               });
-            });
-          },
+            },
+          ),
+        ),
+        Divider(
+          height: 5,
+          thickness: 1,
+          indent: 0,
+          endIndent: 0,
         ),
         // Text('Upcoming Lectures/ Exercises:'),
         Expanded(
