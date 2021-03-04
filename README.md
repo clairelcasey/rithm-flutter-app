@@ -1,7 +1,19 @@
-# Rithm Mobile App
+
+# Rithm Mobile App <img align="right" width="100" height="100" src="./lib/static/rithm.svg">
+
+
+
 A Flutter project for Rithm School's student information system(sis). 
 
-![](gif.gif)
+ ![App Gif](gif.gif)
+ 
+## Functionality includes
+- Homepage with list displaying upcoming events from new API endpoint on Django back-end.
+- Search functionality by title or type of upcoming event. 
+- Detail pages for each upcoming event. 
+  - Detail page info passed as ScreenArguments. 
+- Drawer menu with pages (currently only Staff Members has been implemented). 
+- Staff Members page displaying list of staff from new API endpoint on Django back-end.
 
 ## Potential improvements to be made
 - Add tests.
